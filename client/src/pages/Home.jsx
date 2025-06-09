@@ -1,7 +1,9 @@
+import Navbar from "../components/Navbar"
+
 const Home = () => {
   return (
     <>
-      <h2>Hoem apge</h2>
+      <Navbar />
     </>
   )
 }
