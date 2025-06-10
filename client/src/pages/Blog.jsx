@@ -9,10 +9,11 @@ import user_icon from '../assets/user_icon.svg'
 import facebook_icon from '../assets/facebook_icon.svg'
 import twitter_icon from '../assets/twitter_icon.svg'
 import googleplus_icon from '../assets/googleplus_icon.svg'
+import Loader from "../components/Loader"
 
 const Blog = () => {
   const {id} = useParams()
-  const [data, setData] = useState('demo')
+  const [data, setData] = useState('demo data')
   const [comments, setComments] = useState(['demo'])
   const [name, setName] = useState('')
   const [content, setContent] = useState('')
@@ -108,7 +109,7 @@ const addComment = (e) => {
       <Footer /> {/* footer */}
 
     </div>
-  ) : <h1>Loading...</h1>
+  ) : <Loader />
 }
 
 export default Blog
