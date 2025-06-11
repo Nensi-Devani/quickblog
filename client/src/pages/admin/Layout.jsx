@@ -3,8 +3,9 @@ import logo from '../../assets/logo.svg'
 import Sidebar from '../../components/admin/Sidebar'
 
 const Layout = () => {
+    const navigate = useNavigate();
     const logout = () => {
-        useNavigate('/')
+        navigate('/')
     }
   return (
     <>
