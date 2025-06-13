@@ -3,6 +3,7 @@ import 'dotenv/config'
 import cors from 'cors'
 import connectDB from './config/db.js'
 import adminRouter from './routes/adminRoutes.js'
+import blogRouter from './routes/blogRoutes.js'
 
 const app = express()
 await connectDB() // connect database
@@ -15,8 +16,10 @@ app.use(express.json()) // all the requests will be pass using json method
 app.get('/', (req,res)=>{ // in browser, localhost:3000
     res.send('API is working')
 })
-// admin routes
+// admin route
 app.use('/api/admin', adminRouter)
+// blog route
+app.use('/api/blog', blogRouter)
 
 
 const PORT = process.env.PORT || 3000
