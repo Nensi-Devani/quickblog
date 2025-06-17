@@ -1,19 +1,15 @@
 import { NavLink } from 'react-router-dom'
-import image from '../assets/blog_pic_1.png'
 
-const BlogCard = () => {
-    const id = 1
-    const description = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate debitis ea explicabo impedit hic iusto aut aperiam eius maxime quasi."
-
+const BlogCard = ({blog}) => {
   return (
-    <NavLink to={`/blog/${id}`} className='w-full rounded-lg overflow-hidden shadow hover:scale-102 hover:shadow-primary/25 duration-300 cursor-pointer'>
-      <img src={image} alt="blog image" className='aspect-video' />
+    <NavLink to={`/blog/${blog._id}`} className='w-full rounded-lg overflow-hidden shadow hover:scale-102 hover:shadow-primary/25 duration-300 cursor-pointer'>
+      <img src={blog.image} alt="blog image" className='aspect-video' />
       <span className='ml-5 mt-4 px-3 py-1 inline-block bg-primary/20 rounded-full text-primary text-xs'>
-        Technology
+        {blog.category}
       </span>
       <div className='p-5'>
-        <h5 className='mb-2 font-medium text-gray-900'>Title of the blog</h5>
-        <p className='mb-3 text-xs text-gray-600'> {description.slice(0,80)} </p>
+        <h5 className='mb-2 font-medium text-gray-900'>{blog.title}</h5>
+        <p className='mb-3 text-xs text-gray-600'> {blog.description.slice(0,80)} </p>
       </div>
     </NavLink>
   )
