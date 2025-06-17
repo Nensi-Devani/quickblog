@@ -1,7 +1,17 @@
+import { useRef } from 'react'
 import gradientBg from '../assets/gradientBackground.png'
 import starIcon from '../assets/star_icon.svg'
+import { useAppContext } from '../context/AppContext'
 
 const Header = () => {
+    const {input, setInput} = useAppContext()
+    const inputRef = useRef() 
+    // we want to search when the form submits
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        setInput(inputRef.current.value) // set the input
+    }
+
   return (
     <div className="mx-8 sm:mx-16 xl:mx-24 relative">
         <div className="text-center mt-20 mb-8">
@@ -16,8 +26,13 @@ const Header = () => {
 
             <p className='my-6 sm:my-8 max-w-2xl m-auto max-sm:text-xs text-gray-500'>This is your space to think out loud, to share what matters, and to write without filters. Whether it's one word or a thousand, your story starts here.</p>
 
-            <form className='flex justify-between max-w-lg max-sm:scale-75 mx-auto border border-gray-300 bg-white rounded overflow-hidden'>
-                <input type="text" placeholder='Search for blogs' className='w-full pl-4 outline-none' required/>
+            <form onSubmit={handleSubmit} className='flex justify-between max-w-lg max-sm:scale-75 mx-auto border border-gray-300 bg-white rounded overflow-hidden'>
+                <input 
+                    type="text"
+                    ref={inputRef}
+                    placeholder='Search for blogs' 
+                    className='w-full pl-4 outline-none' 
+                    required/>
                 <button type='submit' className='bg-primary text-white px-8 py-2 m-1.5 rounded hover:scale-105 transition-all cursor-pointer'>Search</button>
             </form>
 
