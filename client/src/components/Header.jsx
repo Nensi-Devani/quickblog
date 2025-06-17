@@ -12,6 +12,11 @@ const Header = () => {
         setInput(inputRef.current.value) // set the input
     }
 
+    const clearSearch = () => {
+        setInput('')
+        inputRef.current.value = ''
+    }
+
   return (
     <div className="mx-8 sm:mx-16 xl:mx-24 relative">
         <div className="text-center mt-20 mb-8">
@@ -37,6 +42,13 @@ const Header = () => {
             </form>
 
         </div>
+
+        <div className="text-center">
+            {input && <button onClick={clearSearch} className="border font-light text-xs py-1 px-3 rounded-sm shadow-custom-sm cursor-pointer">
+                Clear Search
+            </button>}
+        </div>
+            
         <img src={gradientBg} alt="gradient background" className='absolute -top-50 -z-1 opacity-50' />
     </div>
   )
