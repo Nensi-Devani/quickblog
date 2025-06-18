@@ -4,51 +4,77 @@ import Navbar from "../components/Navbar"
 import Footer from "../components/Footer"
 import gradientBg from '../assets/gradientBackground.png'
 import Moment from "moment"
-import image from '../assets/blog_pic_1.png'
 import user_icon from '../assets/user_icon.svg'
 import facebook_icon from '../assets/facebook_icon.svg'
 import twitter_icon from '../assets/twitter_icon.svg'
 import googleplus_icon from '../assets/googleplus_icon.svg'
 import Loader from "../components/Loader"
+import { useAppContext } from "../context/AppContext"
+import toast from "react-hot-toast"
 
 const Blog = () => {
   const {id} = useParams()
-  const [data, setData] = useState('demo data')
-  const [comments, setComments] = useState(['demo'])
+  const {axios} = useAppContext()
+
+  const [blog, setBlog] = useState()
+  const [comments, setComments] = useState([])
   const [name, setName] = useState('')
   const [content, setContent] = useState('')
-  // const fetchBlogData = async () => {
-  //   const data = blog_data.find(item => item.id == id)
-  //   setData(data)
-  // }
-  // const fetchComments = async () => {
-  //   setComments(data)
-  // }
 
-const addComment = (e) => {
-  e.preventDefault()
-}
+  const fetchBlogData = async () => {
+    try{
+      const {data} = await axios.get(`/api/blog/${id}`)
+      data.success ? setBlog(data.blog) : toast.error(data.message)
+    }catch(error){
+      toast.error(error.message)
+    }
+  }
 
-  // useEffect(() => {
-  //   fetchBlogData()
-  //   fetchComments()
-  // },[])
+  const fetchComments = async () => {
+    try{
+      const {data} = await axios.get(`/api/comment/${id}`)
+      data.success ? setComments(data.comments) : toast.error(data.message)
+    }catch(error){
+      toast.error(error.message)
+    }
+  }
 
-  return data ? (
+  const addComment = async (e) => {
+    e.preventDefault()
+    try{
+      const {data} = await axios.post('/api/comment/',{blog: id, name, content})
+      if(data.success){
+        toast.success(data.message)
+        setName('')
+        setContent('')
+      }
+      else
+        toast.error(data.message)
+    }catch(error){
+      toast.error(error.message)
+    }
+  }
+
+  useEffect(() => {
+    fetchBlogData()
+    fetchComments()
+  },[])
+
+  return blog ? (
     <div className="relative">
       <img src={gradientBg} alt="gradient background" className='absolute -top-50 -z-1 opacity-50' /> {/* background image */}
 
       <Navbar /> {/* navbar */}
 
       <div className="text-center mt-20 text-gray-600">
-        <p className="text-primary py-4 font-medium">Published on {Moment('2025-04-21T07:06:37.508Z').format('MMMM Do YYYY')}</p>
-        <h1 className="text-2xl sm:text-5xl font-semibold max-w-2xl mx-auto text-gray-800">Title of Blog</h1>
-        <h2 className="my-5 max-w-lg mx-auto">Sub title of blog here ...</h2>
+        <p className="text-primary py-4 font-medium">Published on {Moment(blog.createdAt).format('MMMM Do YYYY')}</p>
+        <h1 className="text-2xl sm:text-5xl font-semibold max-w-2xl mx-auto text-gray-800"> {blog.title} </h1>
+        <h2 className="my-5 max-w-lg mx-auto"> {blog.subTitle} </h2>
         <p className="inline-block py-1 px-4 rounded-full mb-6 border text-sm border-primary/35 bg-primary/5 font-medium text-primary">Nensi Devani</p>
       </div>
 
       <div className="mx-5 max-w-5xl md:mx-auto my-10 mt-6">
-        <img src={image} alt="blog image" className="rounded-3xl mb-5" />
+        <img src={blog.image} alt="blog image" className="rounded-3xl mb-5" />
 
         {/* blog description */}
         <div className="rich-text max-w-3xl">
@@ -57,17 +83,20 @@ const addComment = (e) => {
 
         {/* comment */}
         <div className="mt-14 mb-10 max-w-3xl mx-auto">
-          <p className="font-semibold mb-4">Comments (5)</p>
+          <p className="font-semibold mb-4">Comments ({comments.length})</p>
           <div className="flex flex-col gap-4">
               {/* comments will be displyed here */}
-              <div className="relative bg-primary/2 border border-primary/5 max-w-xl rounded text-gray-600 p-2">
-                <div className="flex items-center gap-2 mb-2">
-                  <img src={user_icon} alt="user icon" className="w-6" />
-                  <p className="font-medium">User Name</p>
+              {comments.map((comment) => (
+                <div className="relative bg-primary/2 border border-primary/5 max-w-xl rounded text-gray-600 p-2">
+                  <div className="flex items-center gap-2 mb-2">
+                    <img src={user_icon} alt="user icon" className="w-6" />
+                    <p className="font-medium"> {comment.name} </p>
+                  </div>
+                  <p className="text-sm max-w-md ml-8"> {comment.content} </p>
+                  <div className="absolute right-4 bottom-3 flex items-center gap-2 text-xs">{Moment(comment.createdAt).fromNow()}</div>
                 </div>
-                <p className="text-sm max-w-md ml-8">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque, aperiam.</p>
-                <div className="absolute right-4 bottom-3 flex items-center gap-2 text-xs">{Moment('2025-04-21T07:06:37.508Z').fromNow()}</div>
-              </div>
+              ))}
+              
           </div>
         </div>
 
