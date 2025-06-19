@@ -43,7 +43,7 @@ export const createBlog = async (req, res) => {
 
         // Check if all fields are filled
         if(!title || !subTitle || !description || !category || !imageFile)
-            return res.JSON({success: false, message: 'All the fields are required'})
+            return res.json({success: false, message: 'All the fields are required'})
 
         // if all fields are filled
         const fileBuffer = fs.readFileSync(imageFile.path)
