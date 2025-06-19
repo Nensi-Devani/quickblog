@@ -1,15 +1,21 @@
 import { useEffect, useRef, useState } from 'react'
 import upload from '../../assets/upload_area.svg'
 import Quill from 'quill'
+import { useAppContext } from '../../context/AppContext'
+import toast from 'react-hot-toast'
 
 const AddBlog = () => {
+  const {axios} = useAppContext()
+  const [isAdding, setIsAdding] = useState(false)
+
   const editorRef = useRef(null)
   const quillRef = useRef(null)
 
+  const categories = ['Startup', 'Technology', 'Lifestyle', 'Finance'];
   const [image,setImage] = useState(false)
   const [title,setTitle] = useState('')
-  const [subtitle,setSubtitle] = useState('')
-  const [category,setCategory] = useState('Statup')
+  const [subTitle,setSubTitle] = useState('')
+  const [category,setCategory] = useState('')
   const [isPublished,setIsPublished] = useState(false)
 
   const generateContent = () => {
@@ -17,7 +23,35 @@ const AddBlog = () => {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault()  
+    try{
+      setIsAdding(true)
+
+      const blog = {
+        title, subTitle,
+        description: quillRef.current.root.innerHTML,
+        category, isPublished
+      }
+      const formData = new FormData()
+      formData.append('blog',JSON.stringify(blog))
+      formData.append('image',image)
+
+      const {data} = await axios.post('/api/admin/blogs', formData)
+      if(data.success){
+        toast.success(data.message)
+        setImage(false)
+        setTitle('')
+        setSubTitle('')
+        setCategory('')
+        quillRef.current.root.innerHTML = ''
+      }
+      else
+        toast.error(data.message)
+    }catch(error){
+      toast.error(error.message)
+    }finally{
+      setIsAdding(false)
+    }
   }
 
   useEffect(()=>{
@@ -35,7 +69,7 @@ const AddBlog = () => {
           <p>Upload Thumbnail</p>
           <label htmlFor="image">
             <img src={!image ? upload : URL.createObjectURL(image)} alt="upload" className='mt-2 h-16 rounded cursor-pointer' />
-            <input onChange={(e) => setImage(e.target.files[0]) } type="file" id='image' hidden required />
+            <input onChange={(e) => setImage(e.target.files[0]) } type="file" id='image' className='opacity-0' />
           </label>
 
           <p className='mt-4'>Blog Title</p>
@@ -44,7 +78,6 @@ const AddBlog = () => {
             placeholder='Type Here' 
             onChange={(e) => setTitle(e.target.value)}
             value={title}
-            required
             className='w-full max-w-lg bg mt-2 p-2 border border-gray-300 outline-none rounded'
           />
 
@@ -52,9 +85,8 @@ const AddBlog = () => {
           <input 
             type="text"
             placeholder='Type Here' 
-            onChange={(e) => setSubtitle(e.target.value)}
-            value={subtitle}
-            required
+            onChange={(e) => setSubTitle(e.target.value)}
+            value={subTitle}
             className='w-full max-w-lg bg mt-2 p-2 border border-gray-300 outline-none rounded'
           />
 
@@ -70,6 +102,9 @@ const AddBlog = () => {
           <select onChange={(e) => setCategory(e.target.value)} name="category" className='mt-2 px-3 py-2 border text-gray-500 border-gray-300 outline-none rounded'>
             <option value="">Select Category</option>
             {/* blogcategories will displayed here */}
+            { categories.map((item) => (
+              <option value={item}> {item} </option>
+            ))}
           </select>
 
           <div className='flex gap-2 mt-4'>
@@ -82,7 +117,9 @@ const AddBlog = () => {
             />
           </div>
 
-          <button type="submit" className='mt-8 h-10 w-40 bg-primary text-white rounded cursor-pointer text-sm'>Add Blog</button>
+          <button type="submit" disabled={isAdding} className='mt-8 h-10 w-40 bg-primary text-white rounded cursor-pointer text-sm'>
+            {isAdding ? 'Adding...' : 'Add Blog'}
+          </button>
 
         </div>
       </form> 
