@@ -1,5 +1,5 @@
 import express from 'express'
-import { adminLogin, approveCommentById, createBlog, deleteBlog, deleteCommentById, getAllBlogs, getAllComments, getDashboardData, togglePublish } from '../controllers/adminController.js'
+import { adminLogin, approveCommentById, createBlog, deleteBlog, deleteCommentById, generateContent, getAllBlogs, getAllComments, getDashboardData, togglePublish } from '../controllers/adminController.js'
 import auth from '../middlewares/auth.js'
 import upload from '../middlewares/multer.js'
 
@@ -16,6 +16,7 @@ adminRouter.post('/blogs', upload.single('image'), auth, createBlog) // url = /a
 adminRouter.get('/blogs', auth,getAllBlogs)
 adminRouter.delete('/blogs/:id',auth, deleteBlog)
 adminRouter.patch('/blogs/toggle-publish/:id',auth, togglePublish)
+adminRouter.post('/blogs/generate', auth, generateContent)
 
 adminRouter.get('/comments', auth, getAllComments)
 adminRouter.delete('/comments/:id', auth, deleteCommentById)
