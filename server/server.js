@@ -13,7 +13,7 @@ await connectDB() // connect database
 const corsConfig = {
     origin: "*",
     credential: true,
-    methods: ['GET', 'POST', 'PUT', 'PETCH', 'DELETE']
+    methods: ["GET", "POST", "PUT", "PETCH", "DELETE"]
 }
 app.options("", cors(corsConfig))
 
