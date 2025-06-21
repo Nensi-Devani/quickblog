@@ -55,6 +55,7 @@ const AddBlog = () => {
         setTitle('')
         setSubTitle('')
         setCategory('')
+        setIsPublished(false)
         quillRef.current.root.innerHTML = ''
       }
       else
