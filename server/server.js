@@ -9,8 +9,16 @@ import commentRouter from './routes/commentRoutes.js'
 const app = express()
 await connectDB() // connect database
 
+// vercel deployment solution
+const corsConfig = {
+    origin: "*",
+    credential: true,
+    methods: ['GET', 'POST', 'PUT', 'PETCH', 'DELETE']
+}
+app.options("", cors(corsConfig))
+
 // middlewares
-app.use(cors())
+app.use(cors(corsConfig))
 app.use(express.json()) // all the requests will be pass using json method
 
 // routes ::: 
