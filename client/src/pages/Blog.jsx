@@ -77,8 +77,9 @@ const Blog = () => {
         <img src={blog.image} alt="blog image" className="rounded-3xl mb-5" />
 
         {/* blog description */}
-        <div className="rich-text max-w-3xl">
+        <div className="rich-text max-w-3xl mx-auto" dangerouslySetInnerHTML={{ __html: blog.description}}>
           {/* blog description will be displyed here */}
+
         </div>
 
         {/* comment */}
