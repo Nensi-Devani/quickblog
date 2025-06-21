@@ -14,8 +14,7 @@
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "server.js",
-            "methods": ["GET", "POST", "PUT", "PETCH", "DELETE"]
+            "dest": "server.js"
         }
     ]
 }
