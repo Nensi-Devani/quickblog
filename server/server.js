@@ -28,8 +28,12 @@ app.use('/api/comment', commentRouter)
 const PORT = process.env.PORT || 3000
 
 // start the backend server 
-app.listen(PORT, ()=>{
-    console.log('Server is running on port ' + PORT)
-})
+// app.listen(PORT, ()=>{
+//     console.log('Server is running on port ' + PORT)
+// })
+
+app.get('/api/hello', (req, res) => {
+  res.json({ message: 'Hello from Vercel Serverless Express!' });
+});
 
 export default app;
