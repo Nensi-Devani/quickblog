@@ -79,7 +79,6 @@ const Blog = () => {
         {/* blog description */}
         <div className="rich-text max-w-3xl mx-auto" dangerouslySetInnerHTML={{ __html: blog.description}}>
           {/* blog description will be displyed here */}
-
         </div>
 
         {/* comment */}
