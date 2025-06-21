@@ -3,10 +3,13 @@ import upload from '../../assets/upload_area.svg'
 import Quill from 'quill'
 import { useAppContext } from '../../context/AppContext'
 import toast from 'react-hot-toast'
+import {parse} from 'marked' 
+import { div } from 'motion/react-m'
 
 const AddBlog = () => {
   const {axios} = useAppContext()
   const [isAdding, setIsAdding] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const editorRef = useRef(null)
   const quillRef = useRef(null)
@@ -18,8 +21,17 @@ const AddBlog = () => {
   const [category,setCategory] = useState('')
   const [isPublished,setIsPublished] = useState(false)
 
-  const generateContent = () => {
-
+  const generateContent = async () => {
+    if(!title) return toast.error('Please enter a title')
+    try{
+      setLoading(true)
+      const {data} = await axios.post('/api/admin/blogs/generate', {prompt: title})
+      data.success ? quillRef.current.root.innerHTML = parse(data.content) : toast.error(data.message) // parse() for formating the response in html
+    }catch(error){
+      toast.error(error.message)
+    }finally{
+      setLoading(false)
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -93,7 +105,12 @@ const AddBlog = () => {
           <p className='mt-4'>Blog Description</p>
           <div className='max-w-lg h-74 pb-16 sm:pb-10 pt-2 relative'>
             <div ref={editorRef}></div>
-            <button type='button' onClick={generateContent} className='absolute bottom-1 right-2 ml-2 text-xs bg-black/70 text-white px-4 py-1.5 rounded hover:underline cursor-pointer'>
+            {loading && ( // loading animatin
+                <div className="absolute right-0 top-0 bottom-0 left-0 flex items-center justify-center bg-black/10 mt-2">
+                  <div className="w-8 h-8 rounded-full border-2 border-t-white animate-spin"></div>
+                </div>
+            )}
+            <button type='button' disabled={loading} onClick={generateContent} className='absolute bottom-1 right-2 ml-2 text-xs bg-black/70 text-white px-4 py-1.5 rounded hover:underline cursor-pointer'>
               Generate with AI
             </button>
           </div>
